@@ -7,7 +7,7 @@ const features = [
   {
     title: "Receive Money",
     description:
-      "Get instant USDXM transfers directly to your wallet. Balance updates automatically once transfers are processed.",
+      "Get instant stablecoins transfers directly to your wallet. Balance updates automatically once transfers are processed.",
     iconPath: "/rocket.svg",
   },
   {
