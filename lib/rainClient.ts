@@ -8,7 +8,7 @@ const RAIN_API_BASE_URL = process.env.RAIN_API_BASE_URL || 'https://api-dev.rain
 
 // Rain constants (Base Sepolia)
 export const BASE_SEPOLIA_CHAIN_ID = 84532;
-export const USDC_CONTRACT_ADDRESS = '0x036CbD53842c5426634e7929541eC2318f3dCF7e';
+export const USDXM_CONTRACT_ADDRESS = '0x14196F08a4Fa0B66B7331bC40dd6bCd8A1dEeA9F';
 export const RUSD_CONTRACT_ADDRESS = '0x10b5Be494C2962A7B318aFB63f0Ee30b959D000b';
 
 // Rain public key for RSA handshake

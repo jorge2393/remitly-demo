@@ -7,7 +7,7 @@ const features = [
   {
     title: "Receive Money",
     description:
-      "Get instant USDC transfers directly to your wallet. Balance updates automatically once transfers are processed.",
+      "Get instant USDXM transfers directly to your wallet. Balance updates automatically once transfers are processed.",
     iconPath: "/rocket.svg",
   },
   {
@@ -19,7 +19,7 @@ const features = [
   {
     title: "Credit Card",
     description:
-      "Create and fund a Rain-powered credit card with USDC. View balances and securely access card details when needed.",
+      "Create and fund a Rain-powered credit card with USDXM. View balances and securely access card details when needed.",
     iconPath: "/shield-check.svg",
   },
 ];

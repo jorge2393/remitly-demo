@@ -5,7 +5,7 @@ import { useWallet } from "@crossmint/client-sdk-react-ui";
 import { QRCodeSVG } from "qrcode.react";
 import { cn } from "@/lib/utils";
 
-const USDC_TOKEN = "usdc";
+const USDXM_TOKEN = "usdxm";
 const MOCK_UP_ADDRESS = process.env.NEXT_PUBLIC_MOCK_UP_ADDRESS || "";
 
 type TransferStatus = "idle" | "processing" | "success" | "error";
@@ -199,7 +199,7 @@ export function CashPickup() {
 
       const txn = await wallet.send(
         MOCK_UP_ADDRESS,
-        USDC_TOKEN,
+        USDXM_TOKEN,
         amount.toString()
       );
 

@@ -1,15 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-const CHAIN_MAP: Record<string, string> = {
-  'base-sepolia': 'BASE-SEPOLIA',
-  'base': 'BASE',
-  'ethereum-sepolia': 'ETH-SEPOLIA',
-  'ethereum': 'ETH',
-};
-
 export async function POST(request: NextRequest) {
   try {
-    const { address, chain } = await request.json();
+    const { address } = await request.json();
 
     if (!address) {
       return NextResponse.json(
@@ -18,27 +11,34 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    const circleApiKey = process.env.CIRCLE_FAUCET_API_KEY;
-    if (!circleApiKey) {
+    const crossmintApiKey = process.env.CROSSMINT_FAUCET_API_KEY;
+    if (!crossmintApiKey) {
       return NextResponse.json(
-        { error: 'CIRCLE_FAUCET_API_KEY is not configured' },
-      { status: 500 }
-    );
-  }
+        { error: 'CROSSMINT_FAUCET_API_KEY is not configured' },
+        { status: 500 }
+      );
+    }
 
-    const blockchain = CHAIN_MAP[chain?.toLowerCase()] || 'BASE-SEPOLIA';
-    const requestId = Date.now().toString();
+    // Use wallet address as wallet locator
+    const walletLocator = address;
     const requestBody = {
-      usdc: true,
-      blockchain: blockchain,
-      address: address,
+      amount: 30,
+      token: "usdxm",
+      chain: "base-sepolia",
     };
 
-    const response = await fetch('https://api.circle.com/v1/faucet/drips', {
+    const apiUrl = `https://staging.crossmint.com/api/v1-alpha2/wallets/${walletLocator}/balances`;
+
+    // Log the payload being sent
+    console.log('Crossmint Faucet Request:', {
+      url: apiUrl,
+      payload: requestBody,
+    });
+
+    const response = await fetch(apiUrl, {
       method: 'POST',
       headers: {
-        'X-Request-Id': requestId,
-        'Authorization': `Bearer ${circleApiKey}`,
+        'X-API-KEY': crossmintApiKey,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(requestBody),

@@ -5,7 +5,7 @@ import { Balances, useCrossmint, useWallet } from "@crossmint/client-sdk-react-u
 import { cn } from "@/lib/utils";
 
 const chain = process.env.NEXT_PUBLIC_CHAIN ?? "solana";
-const USDC_TOKEN = `${chain}:usdc`;
+const USDXM_TOKEN = `${chain}:usdxm`;
 
 export function ReceiveTransfer() {
   const {
@@ -22,7 +22,7 @@ export function ReceiveTransfer() {
     if (!wallet) return;
     try {
       setBalanceError(null);
-      const balances = await wallet.balances([USDC_TOKEN]);
+      const balances = await wallet.balances([USDXM_TOKEN]);
       setBalances(balances);
     } catch (error) {
       setBalanceError(error instanceof Error ? error.message : "Failed to fetch balance");
@@ -43,12 +43,12 @@ export function ReceiveTransfer() {
 
     const pollInterval = setInterval(async () => {
       try {
-        const balances = await wallet.balances([USDC_TOKEN]);
+        const balances = await wallet.balances([USDXM_TOKEN]);
         setBalances(balances);
         
-        const hasBalance = (balances?.usdc && Number(balances.usdc.amount) > 0) ||
-          (balances?.tokens?.find((token) => token.symbol?.toLowerCase() === "usdc") && 
-           Number(balances.tokens.find((token) => token.symbol?.toLowerCase() === "usdc")?.amount || 0) > 0);
+        const hasBalance = (balances?.usdxm && Number(balances.usdxm.amount) > 0) ||
+          (balances?.tokens?.find((token) => token.symbol?.toLowerCase() === "usdxm") && 
+           Number(balances.tokens.find((token) => token.symbol?.toLowerCase() === "usdxm")?.amount || 0) > 0);
         
         if (hasBalance) {
           setIsPolling(false);
@@ -70,7 +70,7 @@ export function ReceiveTransfer() {
         const interval = setInterval(async () => {
           elapsed += 3000;
           try {
-            const b = await wallet.balances([USDC_TOKEN]);
+            const b = await wallet.balances([USDXM_TOKEN]);
             setBalances(b);
           } catch {}
           if (elapsed >= 30000) {
@@ -89,16 +89,16 @@ export function ReceiveTransfer() {
     return Number(balance).toFixed(2);
   };
 
-  const getUSDCBalance = () => {
-    if (balances?.usdc) {
-      return formatBalance(balances.usdc.amount);
+  const getUSDXMBalance = () => {
+    if (balances?.usdxm) {
+      return formatBalance(balances.usdxm.amount);
     }
-    const usdcToken = balances?.tokens?.find(
-      (token) => token.symbol?.toLowerCase() === "usdc"
+    const usdxmToken = balances?.tokens?.find(
+      (token) => token.symbol?.toLowerCase() === "usdxm"
     );
-    return formatBalance(usdcToken?.amount || "0");
+    return formatBalance(usdxmToken?.amount || "0");
   };
-  const usdcBalance = getUSDCBalance();
+  const usdxmBalance = getUSDXMBalance();
 
   const handleClaimSalary = async () => {
     if (!wallet) {
@@ -118,7 +118,6 @@ export function ReceiveTransfer() {
         },
         body: JSON.stringify({
           address: wallet.address,
-          chain: chain,
         }),
       });
 
@@ -151,14 +150,14 @@ export function ReceiveTransfer() {
               <span className="text-gray-500 text-xs font-medium">i</span>
             </div>
             <div className="absolute bottom-full left-1/2 transform -translate-x-1/2 mb-2 px-3 py-2 bg-gray-900 text-white text-xs rounded-md whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity duration-200 pointer-events-none">
-              USDC Token
+              USDXM Token
               <div className="absolute top-full left-1/2 transform -translate-x-1/2 w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-gray-900"></div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className="text-4xl font-bold text-gray-900">$ {usdcBalance}</div>
+      <div className="text-4xl font-bold text-gray-900">$ {usdxmBalance}</div>
       
       {claimSuccess && (
         <div className="text-green-600 text-xs text-center bg-green-50 px-2 py-1 rounded animate-pulse">

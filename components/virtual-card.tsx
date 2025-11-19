@@ -16,17 +16,11 @@ interface CardData {
   expYear?: number;
 }
 
-interface CardBalance {
-  currency: string;
-  available: number;
-  current: number;
-}
 
 export function VirtualCard() {
   const { wallet } = useWallet();
   const [cardStatus, setCardStatus] = useState<CardStatus>('idle');
   const [cardData, setCardData] = useState<CardData | null>(null);
-  const [cardBalance, setCardBalance] = useState<CardBalance | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [depositAddress, setDepositAddress] = useState<string | null>(null);
   const [rainUserId, setRainUserId] = useState<string | null>(null);
@@ -36,45 +30,46 @@ export function VirtualCard() {
   const [fundTransactionHash, setFundTransactionHash] = useState<string | null>(null);
   const [cardSecrets, setCardSecrets] = useState<{ cardNumber: string; cvc: string } | null>(null);
   const [showSecrets, setShowSecrets] = useState<boolean>(false);
+  const [topUps, setTopUps] = useState<number[]>([]);
+  const [processedTxHashes, setProcessedTxHashes] = useState<Set<string>>(new Set());
 
+  // Load stored top-ups for this user on mount or when card is created
   useEffect(() => {
-    if (cardStatus !== 'created' || !rainUserId) return;
-
-    let pollCount = 0;
-    const maxPolls = 60;
-    let lastBalance = cardBalance?.current || 0;
-
-    const pollBalance = async () => {
-      try {
-        const response = await fetch(`/api/rain/users/${rainUserId}/balances`);
-        if (response.ok) {
-          const balance = await response.json();
-          setCardBalance({ currency: 'USD', available: balance.spendingPower, current: balance.spendingPower });
-          
-          if (pollCount >= 6 && balance.current === lastBalance) {
-            return false;
-          }
-          
-          lastBalance = balance.current;
+    if (!wallet?.address) return;
+    
+    try {
+      const stored = localStorage.getItem(`cardTopUps_${wallet.address}`);
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        if (Array.isArray(parsed)) {
+          setTopUps(parsed);
         }
-      } catch (error) {
-        // Error polling card balance
       }
       
-      pollCount++;
-      return pollCount < maxPolls;
-    };
-
-    pollBalance();
-    const interval = setInterval(async () => {
-      const shouldContinue = await pollBalance();
-      if (!shouldContinue) {
-        clearInterval(interval);
+      // Also load processed transaction hashes to prevent duplicates
+      const storedHashes = localStorage.getItem(`cardTopUpsHashes_${wallet.address}`);
+      if (storedHashes) {
+        const parsedHashes = JSON.parse(storedHashes);
+        if (Array.isArray(parsedHashes)) {
+          setProcessedTxHashes(new Set(parsedHashes));
+        }
       }
-    }, 60000);
+    } catch (e) {
+      // Failed to load stored top-ups
+    }
+  }, [wallet?.address]);
+
+  // Save top-ups to localStorage whenever they change
+  useEffect(() => {
+    if (!wallet?.address) return;
     
-    return () => clearInterval(interval);
-  }, [cardStatus, cardData]);
+    try {
+      localStorage.setItem(`cardTopUps_${wallet.address}`, JSON.stringify(topUps));
+      localStorage.setItem(`cardTopUpsHashes_${wallet.address}`, JSON.stringify(Array.from(processedTxHashes)));
+    } catch (e) {
+      // Failed to save top-ups
+    }
+  }, [topUps, processedTxHashes, wallet?.address]);
 
   useEffect(() => {
     if (fundStatus !== "processing" || !fundTransactionHash || !wallet) return;
@@ -116,52 +111,16 @@ export function VirtualCard() {
     };
   }, [fundStatus, fundTransactionHash, wallet]);
 
+  // Add top-up amount to stored list when funding succeeds (only once per transaction)
   useEffect(() => {
-    if (fundStatus !== "success" || !rainUserId) return;
-
-    let cancelled = false;
-    let pollCount = 0;
-    const maxPolls = 12;
-    let lastBalance = cardBalance?.current || 0;
-
-    const pollBalance = async () => {
-      try {
-        const response = await fetch(`/api/rain/users/${rainUserId}/balances`);
-        if (response.ok) {
-          const balance = await response.json();
-          const newBalance = balance.spendingPower;
-          setCardBalance({ currency: 'USD', available: newBalance, current: newBalance });
-          
-          if (newBalance !== lastBalance || pollCount >= maxPolls) {
-            if (cancelled) return false;
-            return false;
-          }
-          
-          lastBalance = newBalance;
-        }
-      } catch (error) {
-        // Error polling fund balance
+    if (fundStatus === "success" && fundAmount && fundAmount > 0 && fundTransactionHash) {
+      // Check if this transaction hash has already been processed
+      if (!processedTxHashes.has(fundTransactionHash)) {
+        setTopUps((prev) => [...prev, fundAmount]);
+        setProcessedTxHashes((prev) => new Set([...prev, fundTransactionHash]));
       }
-      
-      pollCount++;
-      return pollCount < maxPolls;
-    };
-
-    const getInterval = () => pollCount < 6 ? 10000 : 30000;
-    
-    const pollAndSchedule = async () => {
-      const shouldContinue = await pollBalance();
-      if (!cancelled && shouldContinue) {
-        setTimeout(pollAndSchedule, getInterval());
-      }
-    };
-
-    pollAndSchedule();
-
-    return () => {
-      cancelled = true;
-    };
-  }, [fundStatus, rainUserId]);
+    }
+  }, [fundStatus, fundAmount, fundTransactionHash, processedTxHashes]);
 
   // Reset fund form after success
   useEffect(() => {
@@ -301,7 +260,7 @@ export function VirtualCard() {
 
       const txn = await wallet.send(
         depositAddress,
-        "usdc", // USDC token
+        "usdxm", // USDXM token
         fundAmount.toString()
       );
 
@@ -322,7 +281,8 @@ export function VirtualCard() {
   };
 
 
-  const displayBalance = cardBalance?.current || 0;
+  // Calculate balance from stored top-ups
+  const displayBalance = topUps.reduce((sum, amount) => sum + amount, 0);
   const isBalanceZero = displayBalance === 0;
   const isFundLoading = fundStatus === "processing";
   const isFundSuccess = fundStatus === "success";

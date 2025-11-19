@@ -316,9 +316,9 @@ export function Dashboard() {
 
           {/* Main Dashboard Grid */}
           <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
-            {/* USDC Balance & Wallet Details Column */}
+            {/* USDXM Balance & Wallet Details Column */}
             <div className="flex flex-col gap-6">
-              {/* USDC Balance Section */}
+              {/* USDXM Balance Section */}
               <div className="bg-white rounded-2xl border shadow-sm p-6">
                 <ReceiveTransfer />
               </div>
