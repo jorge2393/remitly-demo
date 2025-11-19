@@ -16,6 +16,7 @@ interface Agent {
   address: string;
   distance: string;
   hours: string;
+  isOpen: boolean;
   lat: number;
   lng: number;
 }
@@ -32,28 +33,31 @@ interface CashPickupRequest {
 const MOCK_AGENTS: Agent[] = [
   {
     id: "1",
-    name: "Western Union - Downtown",
-    address: "123 Main St, New York, NY 10001",
-    distance: "0.3 mi",
-    hours: "Mon-Sat 9AM-7PM",
+    name: "MoneyMart Financial Center",
+    address: "241 W 37th St, New York, NY 10018",
+    distance: "0.3 mi away",
+    hours: "Mon–Fri: 8AM–8PM",
+    isOpen: true,
     lat: 40.7128,
     lng: -74.0060,
   },
   {
     id: "2",
-    name: "Western Union - Midtown",
-    address: "456 Broadway, New York, NY 10013",
-    distance: "1.2 mi",
-    hours: "Mon-Fri 8AM-8PM",
+    name: "CityCash Services",
+    address: "465 Lexington Ave, New York, NY 10017",
+    distance: "1.2 mi away",
+    hours: "Mon–Sat: 9AM–6PM",
+    isOpen: true,
     lat: 40.7589,
     lng: -73.9851,
   },
   {
     id: "3",
-    name: "Western Union - Brooklyn",
-    address: "789 Atlantic Ave, Brooklyn, NY 11238",
-    distance: "2.5 mi",
-    hours: "Daily 7AM-9PM",
+    name: "ExpressPay Market",
+    address: "89 Flatbush Ave, Brooklyn, NY 11217",
+    distance: "2.5 mi away",
+    hours: "Daily: 10AM–9PM",
+    isOpen: false,
     lat: 40.6782,
     lng: -73.9442,
   },
@@ -233,78 +237,76 @@ export function CashPickup() {
 
   if (showMap && !selectedAgent) {
     return (
-      <div className="bg-white rounded-2xl border shadow-sm p-6 flex flex-col h-full">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Find an Agent</h3>
+      <div className="bg-white rounded-2xl border shadow-sm p-5 flex flex-col h-full">
+        <div className="flex items-center justify-between mb-5">
+          <div>
+            <h3 className="text-lg font-semibold text-gray-900">Select an Agent</h3>
+            <p className="text-sm text-gray-500 mt-0.5">Choose a location to pick up your cash</p>
+          </div>
           <button
             onClick={() => setShowMap(false)}
-            className="text-gray-500 hover:text-gray-700"
+            className="text-gray-400 hover:text-gray-600 transition-colors p-1"
+            aria-label="Close"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
         </div>
 
-        {/* Mock Map */}
-        <div className="flex-1 bg-gray-100 rounded-lg mb-4 relative overflow-hidden">
-          {/* Simple map mockup with markers */}
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-green-50">
-            {/* Map grid pattern */}
-            <div className="absolute inset-0 opacity-20" style={{
-              backgroundImage: `linear-gradient(to right, #000 1px, transparent 1px),
-                                linear-gradient(to bottom, #000 1px, transparent 1px)`,
-              backgroundSize: '20px 20px'
-            }}></div>
-            
-            {/* Agent markers */}
-            {MOCK_AGENTS.map((agent, index) => (
-              <button
-                key={agent.id}
-                onClick={() => setSelectedAgent(agent)}
-                className="absolute transform -translate-x-1/2 -translate-y-1/2"
-                style={{
-                  left: `${20 + index * 30}%`,
-                  top: `${30 + (index % 2) * 30}%`,
-                }}
-              >
-                <div className="relative">
-                  <div className="w-8 h-8 bg-[#038de1] rounded-full border-2 border-white shadow-lg flex items-center justify-center">
-                    <svg className="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path fillRule="evenodd" d="M5.05 4.05a7 7 0 119.9 9.9L10 18.9l-4.95-4.95a7 7 0 010-9.9zM10 11a2 2 0 100-4 2 2 0 000 4z" clipRule="evenodd" />
-                    </svg>
-                  </div>
-                  <div className="absolute top-10 left-1/2 transform -translate-x-1/2 whitespace-nowrap bg-white px-2 py-1 rounded shadow text-xs font-medium">
-                    {agent.name}
-                  </div>
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
         {/* Agent List */}
-        <div className="space-y-3 max-h-64 overflow-y-auto">
+        <div className="space-y-3 flex-1 overflow-y-auto -mx-1 px-1">
           {MOCK_AGENTS.map((agent) => (
-            <button
+            <div
               key={agent.id}
-              onClick={() => setSelectedAgent(agent)}
-              className="w-full text-left p-4 border rounded-lg hover:bg-gray-50 transition-colors"
+              className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 hover:shadow-sm transition-all bg-white"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  <h4 className="font-semibold text-gray-900">{agent.name}</h4>
-                  <p className="text-sm text-gray-600 mt-1">{agent.address}</p>
-                  <div className="flex items-center gap-4 mt-2 text-xs text-gray-500">
-                    <span>{agent.distance}</span>
-                    <span>{agent.hours}</span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1 min-w-0">
+                  {/* Business Name */}
+                  <h4 className="font-semibold text-gray-900 text-base mb-2">{agent.name}</h4>
+                  
+                  {/* Address */}
+                  <div className="flex items-start gap-2 mb-3">
+                    <svg className="w-4 h-4 text-gray-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span className="text-sm text-gray-700 leading-relaxed">{agent.address}</span>
+                  </div>
+                  
+                  {/* Divider */}
+                  <div className="border-t border-gray-100 my-3"></div>
+                  
+                  {/* Hours and Distance */}
+                  <div className="flex items-center gap-4 text-xs text-gray-500">
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      <span>{agent.hours}</span>
+                    </div>
+                    <div className="flex items-center gap-1.5">
+                      <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                      </svg>
+                      <span>{agent.distance}</span>
+                    </div>
                   </div>
                 </div>
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                
+                {/* Right Column: Select Button */}
+                <div className="flex flex-col items-end flex-shrink-0">
+                  <button
+                    onClick={() => setSelectedAgent(agent)}
+                    className="px-5 py-2.5 bg-[#FFE327] text-black rounded-lg text-sm font-semibold hover:bg-[#FFD700] transition-colors shadow-sm"
+                  >
+                    Select
+                  </button>
+                </div>
               </div>
-            </button>
+            </div>
           ))}
         </div>
       </div>
