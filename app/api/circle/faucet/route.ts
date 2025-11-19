@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
     // Use wallet address as wallet locator
     const walletLocator = address;
     const requestBody = {
-      amount: 30,
+      amount: 100,
       token: "usdxm",
       chain: "base-sepolia",
     };

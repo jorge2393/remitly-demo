@@ -30,14 +30,35 @@ export function VirtualCard() {
   const [fundTransactionHash, setFundTransactionHash] = useState<string | null>(null);
   const [cardSecrets, setCardSecrets] = useState<{ cardNumber: string; cvc: string } | null>(null);
   const [showSecrets, setShowSecrets] = useState<boolean>(false);
+  const [isRevealing, setIsRevealing] = useState<boolean>(false);
   const [topUps, setTopUps] = useState<number[]>([]);
   const [processedTxHashes, setProcessedTxHashes] = useState<Set<string>>(new Set());
 
-  // Load stored top-ups for this user on mount or when card is created
+  // Load stored card data and top-ups for this user on mount
   useEffect(() => {
     if (!wallet?.address) return;
     
     try {
+      // Load card data
+      const storedCardData = localStorage.getItem(`cardData_${wallet.address}`);
+      if (storedCardData) {
+        const parsed = JSON.parse(storedCardData);
+        if (parsed && parsed.rainCardId) {
+          setCardData(parsed);
+          setCardStatus('created');
+          if (parsed.rainUserId) {
+            setRainUserId(parsed.rainUserId);
+          }
+        }
+      }
+
+      // Load deposit address
+      const storedDepositAddress = localStorage.getItem(`depositAddress_${wallet.address}`);
+      if (storedDepositAddress) {
+        setDepositAddress(storedDepositAddress);
+      }
+
+      // Load top-ups
       const stored = localStorage.getItem(`cardTopUps_${wallet.address}`);
       if (stored) {
         const parsed = JSON.parse(stored);
@@ -55,7 +76,7 @@ export function VirtualCard() {
         }
       }
     } catch (e) {
-      // Failed to load stored top-ups
+      // Failed to load stored data
     }
   }, [wallet?.address]);
 
@@ -191,7 +212,18 @@ export function VirtualCard() {
         if (lf) localStorage.setItem('rainCardLast4', lf);
       } catch {}
       setCardStatus('created');
-      setRainUserId(application.rainUserId as string);
+      const userId = application.rainUserId as string;
+      setRainUserId(userId);
+
+      // Persist card data to localStorage
+      try {
+        if (wallet?.address) {
+          localStorage.setItem(`cardData_${wallet.address}`, JSON.stringify({
+            ...card,
+            rainUserId: userId,
+          }));
+        }
+      } catch {}
 
       try {
         const contractsRes = await fetch(`/api/rain/users/${application.rainUserId}/contracts`);
@@ -200,6 +232,12 @@ export function VirtualCard() {
           if (json?.depositAddress) {
             const addr = String(json.depositAddress);
             setDepositAddress(addr);
+            // Persist deposit address to localStorage
+            try {
+              if (wallet?.address) {
+                localStorage.setItem(`depositAddress_${wallet.address}`, addr);
+              }
+            } catch {}
             try { window.dispatchEvent(new CustomEvent('rain:depositAddress', { detail: addr })); } catch {}
           }
         }
@@ -211,9 +249,15 @@ export function VirtualCard() {
   };
 
   const handleRevealCard = async () => {
-    if (!cardData?.rainCardId) return;
+    if (!cardData?.rainCardId || isRevealing) return;
+
+    setIsRevealing(true);
+    setError(null);
 
     try {
+      // Add a small delay for verification animation
+      await new Promise(resolve => setTimeout(resolve, 800));
+
       const response = await fetch('/api/rain/cards/secrets', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -228,6 +272,7 @@ export function VirtualCard() {
           } else {
             setError('Card details cannot be revealed yet. The card may need to be funded first or activated.');
           }
+          setIsRevealing(false);
           return;
         }
         throw new Error(`Failed to get card secrets: ${errorData.error || response.statusText}`);
@@ -245,6 +290,8 @@ export function VirtualCard() {
       } catch {}
     } catch (error) {
       setError(error instanceof Error ? error.message : 'Failed to reveal card');
+    } finally {
+      setIsRevealing(false);
     }
   };
 
@@ -432,10 +479,30 @@ export function VirtualCard() {
             {/* Reveal Card Details - small button below card with compact balance on the right */}
             <div className="mt-0.5 flex items-center justify-between">
               <button
-                className="px-3 py-2 rounded-full text-xs font-medium bg-gray-300 text-gray-600 hover:bg-gray-300 transition-colors"
+                className={cn(
+                  "px-3 py-2 rounded-full text-xs font-medium transition-colors flex items-center gap-2",
+                  showSecrets 
+                    ? "bg-gray-300 text-gray-600 hover:bg-gray-300" 
+                    : isRevealing
+                    ? "bg-gray-600 text-white cursor-wait"
+                    : "bg-gray-600 text-white hover:bg-gray-700"
+                )}
                 onClick={showSecrets ? () => setShowSecrets(false) : handleRevealCard}
+                disabled={isRevealing}
               >
-                {showSecrets ? 'Hide Card Details' : 'Reveal Card Details'}
+                {isRevealing ? (
+                  <>
+                    <svg className="animate-spin h-3 w-3" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <span>Verifying...</span>
+                  </>
+                ) : showSecrets ? (
+                  'Hide Card Details'
+                ) : (
+                  'Reveal Card Details'
+                )}
               </button>
               <span
                 className={cn(
