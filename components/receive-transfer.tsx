@@ -160,12 +160,6 @@ export function ReceiveTransfer() {
 
       <div className="text-4xl font-bold text-gray-900">$ {usdcBalance}</div>
       
-      {balanceError && (
-        <div className="text-red-600 text-xs text-center bg-red-50 px-2 py-1 rounded">
-          Error: {balanceError}
-        </div>
-      )}
-
       {claimSuccess && (
         <div className="text-green-600 text-xs text-center bg-green-50 px-2 py-1 rounded animate-pulse">
           ✓ Money transfer initiated! Balance will update shortly.

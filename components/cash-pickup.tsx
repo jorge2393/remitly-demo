@@ -65,6 +65,7 @@ export function CashPickup() {
   const [amountInput, setAmountInput] = useState<string>("");
   const [transferStatus, setTransferStatus] = useState<TransferStatus>("idle");
   const [transactionHash, setTransactionHash] = useState<string | null>(null);
+  const [transactionId, setTransactionId] = useState<string | null>(null);
   const [selectedAgent, setSelectedAgent] = useState<Agent | null>(null);
   const [showMap, setShowMap] = useState(false);
   const [completedRequests, setCompletedRequests] = useState<CashPickupRequest[]>([]);
@@ -89,23 +90,28 @@ export function CashPickup() {
     }
   }, [completedRequests]);
   useEffect(() => {
-    if (transferStatus !== "processing" || !transactionHash || !wallet) return;
+    if (transferStatus !== "processing" || !transactionId || !wallet) return;
 
     let cancelled = false;
-    const intervalMs = 3000;
-    const timeoutMs = 30000;
+    const intervalMs = 1000;
+    const timeoutMs = 60000;
 
     const poll = async () => {
       try {
-        const activity = await wallet.experimental_activity();
-        const found = activity?.events?.some(
-          (e: any) =>
-            typeof e?.transaction_hash === "string" &&
-            typeof transactionHash === "string" &&
-            e.transaction_hash.toLowerCase() === transactionHash.toLowerCase()
-        );
-        if (!cancelled && found) {
+        if (typeof wallet.experimental_transaction !== 'function') {
+          return;
+        }
+        const txStatus = await wallet.experimental_transaction(transactionId);
+        
+        if (!cancelled && txStatus?.status === "success") {
           setTransferStatus("success");
+        } else if (!cancelled && txStatus?.status === "failed") {
+          setTransferStatus("error");
+          setTimeout(() => {
+            if (!cancelled) {
+              setTransferStatus("idle");
+            }
+          }, 3000);
         }
       } catch (err) {
         // Non-fatal: keep polling
@@ -126,7 +132,7 @@ export function CashPickup() {
       clearInterval(intervalId);
       clearTimeout(timeoutId);
     };
-  }, [transferStatus, transactionHash, wallet]);
+  }, [transferStatus, transactionId, wallet]);
 
   useEffect(() => {
     if (transferStatus === "success" && selectedAgent && transactionHash && amount) {
@@ -160,6 +166,7 @@ export function CashPickup() {
         setAmountInput("");
         setTransferStatus("idle");
         setTransactionHash(null);
+        setTransactionId(null);
         setSelectedAgent(null);
         setShowMap(false);
       }, 3000);
@@ -184,6 +191,7 @@ export function CashPickup() {
     try {
       setTransferStatus("processing");
       setTransactionHash(null);
+      setTransactionId(null);
 
       const txn = await wallet.send(
         MOCK_UP_ADDRESS,
@@ -192,6 +200,7 @@ export function CashPickup() {
       );
 
       setTransactionHash(txn.hash || "");
+      setTransactionId(txn.transactionId || "");
     } catch (err) {
       setTransferStatus("error");
       setTimeout(() => {

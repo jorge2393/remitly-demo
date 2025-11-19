@@ -310,7 +310,7 @@ export function Dashboard() {
         {/* Dashboard Header */}
         <div className="flex flex-col gap-4 bg-white rounded-2xl border shadow-sm p-6 pb-9">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">Contractor Dashboard</h2>
+            <h2 className="text-xl font-semibold">User Wallet</h2>
             <AuthLogout />
           </div>
 
