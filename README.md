@@ -4,19 +4,19 @@
 <img width="200" alt="Image" src="https://github.com/user-attachments/assets/8b617791-cd37-4a5a-8695-a7c9018b7c70" />
 <br>
 <br>
-<h1>Western Union Agent Demo</h1>
+<h1>Remitly Agent Demo</h1>
 
 <br>
 <br>
 </div>
 
 ## Introduction
-This demo demonstrates a Western Union agent interface built with Crossmint and Rain. Users sign in with email to auto‑create a smart wallet, receive money transfers, request cash pickups, or create and fund a Rain credit card—then view balances, activity, and securely reveal card details.
+This demo demonstrates a Remitly agent interface built with Crossmint and Rain. Users sign in with email to auto‑create a smart wallet, receive money transfers, request cash pickups, or create and fund a Rain credit card—then view balances, activity, and securely reveal card details.
 
 **Features:**
 - **Account Management**: View USDC balance on Base Sepolia
 - **Money Transfers**: Simulate money transfers via Circle faucet
-- **Cash Pickup**: Request cash pickup at Western Union agent locations
+- **Cash Pickup**: Request cash pickup at Remitly agent locations
 - **Credit Cards**: Create and manage Rain-powered credit cards
 - **Card Funding**: Fund credit cards with USDC
 - **Card Details**: Securely reveal PAN and CVC using RSA/AES encryption
@@ -26,7 +26,7 @@ This demo demonstrates a Western Union agent interface built with Crossmint and 
 ## Setup
 1. Clone the repository and navigate to the project folder:
 ```bash
-git clone https://github.com/jorge2393/wu-user-demo.git && cd wu-user-demo
+git clone https://github.com/jorge2393/remitly-demo.git && cd remitly-demo
 ```
 
 2. Install all dependencies:

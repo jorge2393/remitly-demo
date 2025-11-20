@@ -11,11 +11,11 @@ fi
 git add .
 
 # Create initial commit
-git commit -m "Initial commit: Western Union User Demo" || git commit -m "Update: Western Union User Demo"
+git commit -m "Initial commit: Remitly User Demo" || git commit -m "Update: Remitly User Demo"
 
 # Add or update the remote repository
 git remote remove origin 2>/dev/null || true
-git remote add origin https://github.com/jorge2393/wu-user-demo.git
+git remote add origin https://github.com/jorge2393/remitly-demo.git
 
 # Set the branch to main
 git branch -M main
@@ -23,5 +23,5 @@ git branch -M main
 # Push to GitHub
 git push -u origin main
 
-echo "Done! Code pushed to https://github.com/jorge2393/wu-user-demo"
+echo "Done! Code pushed to https://github.com/jorge2393/remitly-demo"
 

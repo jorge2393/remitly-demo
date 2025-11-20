@@ -14,7 +14,7 @@ const chain = (process.env.NEXT_PUBLIC_CHAIN ?? "solana") as any;
 
 const customAppearance = {
   colors: {
-    accent: "#020617",
+    accent: "#2b415a",
   },
 };
 

@@ -170,7 +170,7 @@ export function ReceiveTransfer() {
             "w-full py-3 px-4 rounded-full text-sm font-medium transition-colors cursor-pointer",
             isClaiming
               ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-              : "bg-[#FFE327] text-black hover:bg-[#FFD700]"
+              : "bg-[#2b415a] text-white hover:bg-[#3a5a7a]"
           )}
         >
           {isClaiming ? "Receiving Money Transfer..." : "Receive Money Transfer"}

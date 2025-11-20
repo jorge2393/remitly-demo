@@ -69,11 +69,11 @@ export function Dashboard() {
     return (
       <div className="min-h-screen bg-gray-50 flex flex-col pb-20">
         {/* Header with Logo */}
-        <div className="sticky top-0 z-10 border-b" style={{ backgroundColor: '#FFE327' }}>
+        <div className="sticky top-0 z-10 border-b" style={{ backgroundColor: '#2b415a' }}>
           <div className="flex items-center justify-between px-4 py-3">
             <Image
-              src="/WU-black.png"
-              alt="Western Union Agent logo"
+              src="/remitly-logo-white.png"
+              alt="Remitly Agent logo"
               priority
               width={180}
               height={60}
@@ -299,7 +299,7 @@ export function Dashboard() {
         <div className="flex flex-col items-center mb-6">
           <Image
             src="/WU-black.png"
-            alt="Western Union Agent logo"
+            alt="Remitly Agent logo"
             priority
             width={260}
             height={85}

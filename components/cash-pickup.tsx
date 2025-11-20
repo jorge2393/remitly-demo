@@ -300,7 +300,7 @@ export function CashPickup() {
                 <div className="flex flex-col items-end flex-shrink-0">
                   <button
                     onClick={() => setSelectedAgent(agent)}
-                    className="px-5 py-2.5 bg-[#FFE327] text-black rounded-lg text-sm font-semibold hover:bg-[#FFD700] transition-colors shadow-sm"
+                    className="px-5 py-2.5 bg-[#2b415a] text-white rounded-lg text-sm font-semibold hover:bg-[#3a5a7a] transition-colors shadow-sm"
                   >
                     Select
                   </button>
@@ -443,7 +443,7 @@ export function CashPickup() {
             </div>
             <div className="text-center">
               <h4 className="font-semibold text-gray-900 mb-2">
-                Find a Western Union Agent
+                Find a Remitly Agent
               </h4>
               <p className="text-sm text-gray-600 mb-6 max-w-sm">
                 Select an agent location near you to pick up your cash
@@ -451,7 +451,7 @@ export function CashPickup() {
             </div>
             <button
               onClick={() => setShowMap(true)}
-              className="w-full py-3 px-4 rounded-full text-sm font-medium bg-[#FFE327] text-black hover:bg-[#FFD700] transition-colors"
+              className="w-full py-3 px-4 rounded-full text-sm font-medium bg-[#2b415a] text-white hover:bg-[#3a5a7a] transition-colors"
             >
               Find an Agent
             </button>
@@ -544,7 +544,7 @@ export function CashPickup() {
                 "w-full py-3 px-4 rounded-full text-sm font-medium transition-colors",
                 isLoading || !amount
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-[#FFE327] text-black hover:bg-[#FFD700]"
+                  : "bg-[#2b415a] text-white hover:bg-[#3a5a7a]"
               )}
               onClick={handleCashPickup}
               disabled={isLoading || !amount}
@@ -587,7 +587,7 @@ export function CashPickup() {
                     </div>
                     <button
                       onClick={() => setShowQrForRequest(showQrForRequest === request.id ? null : request.id)}
-                      className="ml-4 px-3 py-2 text-xs font-medium rounded-lg bg-[#FFE327] text-black hover:bg-[#FFD700] transition-colors"
+                      className="ml-4 px-3 py-2 text-xs font-medium rounded-lg bg-[#2b415a] text-white hover:bg-[#3a5a7a] transition-colors"
                     >
                       {showQrForRequest === request.id ? "Hide QR" : "Show QR"}
                     </button>

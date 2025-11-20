@@ -361,7 +361,7 @@ export function VirtualCard() {
                       "w-full py-3 px-4 rounded-full text-sm font-medium transition-colors",
                       isFundLoading || !fundAmount || isFundSuccess
                         ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                        : "bg-[#FFE327] text-black hover:bg-[#FFD700]"
+                        : "bg-[#2b415a] text-white hover:bg-[#3a5a7a]"
                     )}
                     onClick={handleFundCard}
                     disabled={isFundLoading || !fundAmount || isFundSuccess}
@@ -400,8 +400,8 @@ export function VirtualCard() {
                   </p>
                 </div>
                 <Image
-                  src="/white-WU.png"
-                  alt="Western Union Logo"
+                  src="/remitly-white.png"
+                  alt="Remitly Logo"
                   width={48}
                   height={48}
                   className="absolute top-3.5 right-3.5 rounded z-10"
@@ -516,7 +516,7 @@ export function VirtualCard() {
                 "w-full py-3 px-4 rounded-full text-sm font-medium transition-colors",
                 cardStatus !== 'idle'
                   ? "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  : "bg-[#FFE327] text-black hover:bg-[#FFD700]"
+                  : "bg-[#2b415a] text-white hover:bg-[#3a5a7a]"
               )}
               onClick={handleCreateCard}
               disabled={cardStatus !== 'idle'}

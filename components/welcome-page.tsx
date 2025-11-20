@@ -13,7 +13,7 @@ const features = [
   {
     title: "Cash Pickup",
     description:
-      "Request cash at Western Union agent locations. Select an agent, send funds, and show your QR code for pickup.",
+      "Request cash at Remitly agent locations. Select an agent, send funds, and show your QR code for pickup.",
     iconPath: "/trending-up.svg",
   },
   {
@@ -58,7 +58,7 @@ export function LandingPage({ isLoading }: { isLoading: boolean }) {
         {/* Content */}
         <div className="relative z-10 flex flex-col gap-12 text-white">
           <div className="flex flex-col gap-4">
-            <h1 className="text-6xl font-bold">Western Union User Demo</h1>
+            <h1 className="text-6xl font-bold">Remitly User Demo</h1>
             <p className="text-white/60 text-lg">
             Sign in with email to create a smart wallet, receive money transfers, request cash pickups, or create and fund a credit card.
             </p>

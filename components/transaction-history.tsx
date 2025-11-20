@@ -214,7 +214,7 @@ export function TransactionHistory() {
                 fundButton.click();
               }
             }}
-            className="px-6 py-2.5 rounded-full text-sm font-medium bg-[#FFE327] text-black hover:bg-[#FFD700] transition-colors"
+            className="px-6 py-2.5 rounded-full text-sm font-medium bg-[#2b415a] text-white hover:bg-[#3a5a7a] transition-colors"
           >
               Simulate transfer
           </button>
