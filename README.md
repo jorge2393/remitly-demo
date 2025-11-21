@@ -11,13 +11,13 @@
 </div>
 
 ## Introduction
-This demo demonstrates a Remitly agent interface built with Crossmint and Rain. Users sign in with email to auto‑create a smart wallet, receive money transfers, request cash pickups, or create and fund a Rain credit card—then view balances, activity, and securely reveal card details.
+This demo demonstrates a Remitly agent interface built with Crossmint and Rain. Users sign in with email to auto‑create a smart wallet, receive money transfers, request cash pickups, or create and fund a credit card—then view balances, activity, and securely reveal card details.
 
 **Features:**
 - **Account Management**: View USDC balance on Base Sepolia
 - **Money Transfers**: Simulate money transfers via Circle faucet
 - **Cash Pickup**: Request cash pickup at Remitly agent locations
-- **Credit Cards**: Create and manage Rain-powered credit cards
+- **Credit Cards**: Create and manage credit cards
 - **Card Funding**: Fund credit cards with USDC
 - **Card Details**: Securely reveal PAN and CVC using RSA/AES encryption
 - **Transaction History**: View recent wallet activity

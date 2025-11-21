@@ -29,9 +29,9 @@ export async function GET(
 
     return NextResponse.json({ cards });
   } catch (error) {
-    console.error('Error listing Rain cards:', error);
+    console.error('Error listing cards:', error);
     return NextResponse.json(
-      { error: 'Failed to list Rain cards' },
+      { error: 'Failed to list cards' },
       { status: 500 }
     );
   }
@@ -124,9 +124,9 @@ export async function POST(
       expYear: card.expYear,
     });
   } catch (error) {
-    console.error('Error creating Rain card:', error);
+    console.error('Error creating card:', error);
     return NextResponse.json(
-      { error: 'Failed to create Rain card' },
+      { error: 'Failed to create card' },
       { status: 500 }
     );
   }

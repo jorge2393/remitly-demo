@@ -19,7 +19,7 @@ const features = [
   {
     title: "Credit Card",
     description:
-      "Create and fund a Rain-powered credit card with USDXM. View balances and securely access card details when needed.",
+      "Create and fund a credit card with USDXM. View balances and securely access card details when needed.",
     iconPath: "/shield-check.svg",
   },
 ];

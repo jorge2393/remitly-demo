@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
       cvc: cardData.cvc,
     });
   } catch (error) {
-    console.error('Error getting Rain card secrets:', error);
+    console.error('Error getting card secrets:', error);
     return NextResponse.json(
       { error: 'Failed to get card secrets' },
       { status: 500 }
