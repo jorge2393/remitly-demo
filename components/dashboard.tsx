@@ -159,7 +159,7 @@ export function Dashboard() {
 
                   <div className="flex items-center gap-2 justify-between">
                     <span className="text-sm font-medium text-gray-500">
-                      Rain Contract
+                      Card Contract
                     </span>
                     <div className="flex items-center gap-2">
                       <span className="font-mono text-sm text-gray-900">
@@ -393,7 +393,7 @@ export function Dashboard() {
 
                    <div className="flex items-center gap-2 justify-between">
                      <span className="text-sm font-medium text-gray-500">
-                       Rain Contract
+                       Card Contract
                      </span>
                      <div className="flex items-center gap-2">
                        <span className="font-mono text-sm text-gray-900 overflow-auto">
