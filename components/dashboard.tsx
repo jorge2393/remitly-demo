@@ -298,7 +298,7 @@ export function Dashboard() {
       <div className="w-full max-w-[1600px] mx-auto px-4 pt-3 pb-6 sm:pt-5">
         <div className="flex flex-col items-center mb-6">
           <Image
-            src="/WU-black.png"
+            src="/remitlyDashb.png"
             alt="Remitly Agent logo"
             priority
             width={260}
